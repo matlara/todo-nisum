@@ -7,9 +7,9 @@ import java.util.List;
 public interface TodoDao {
 
     public List<Todo> getAll();
-    public Todo getById();
-    public void add();
-    public void update();
-    public Todo deleteById();
+    public Todo getById(String todoId);
+    public void add(Todo todo);
+    public void update(Todo todo);
+    public Todo deleteById(String id);
 
 }
