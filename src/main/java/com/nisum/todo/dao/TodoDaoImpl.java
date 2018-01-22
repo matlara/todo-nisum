@@ -36,8 +36,6 @@ public class TodoDaoImpl implements TodoDao {
         todos.put(todo.getId(), todo);
     }
 
-    public Todo deleteById(String id){
-        return todos.remove(id);
-    }
+    public Todo deleteById(String todoId){ return todos.remove(todoId); }
 
 }

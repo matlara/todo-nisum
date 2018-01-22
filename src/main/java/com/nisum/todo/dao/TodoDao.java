@@ -10,6 +10,6 @@ public interface TodoDao {
     public Todo getById(String todoId);
     public void add(Todo todo);
     public void update(Todo todo);
-    public Todo deleteById(String id);
+    public Todo deleteById(String todoId);
 
 }
