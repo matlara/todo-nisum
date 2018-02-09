@@ -16,4 +16,10 @@ public class Todo {
         this.title = title;
         this.done = done;
     }
+
+    public Todo(String id, String title, Boolean done) {
+        this.id = id;
+        this.title = title;
+        this.done = done;
+    }
 }
