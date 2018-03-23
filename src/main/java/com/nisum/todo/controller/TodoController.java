@@ -1,6 +1,5 @@
 package com.nisum.todo.controller;
 
-import com.nisum.todo.dao.TodoDaoImpl;
 import com.nisum.todo.entity.Todo;
 import com.nisum.todo.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,6 @@ import java.util.List;
 public class TodoController {
 
     @Autowired
-    private TodoDaoImpl service = new TodoDaoImpl();
-
-
-    @Autowired
     private TodoRepository todoRepository;
 
     @GetMapping("todos")
@@ -26,39 +21,39 @@ public class TodoController {
         return todoRepository.findAll();
     }
 
-
-
-    @RequestMapping(value = "/{todoId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "todos/{todoId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Todo> getTodo(@PathVariable String todoId) {
-        Todo todo = service.getById(todoId);
         ResponseEntity<Todo> response;
-        if (todo == null) {
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
+        Todo todo = todoRepository.findOne(todoId);
+        if (todo != null) {
             response = new ResponseEntity<>(todo, HttpStatus.OK);
+        } else {
+            response = new ResponseEntity<>(todo, HttpStatus.NOT_FOUND);
         }
         return response;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTodo(@RequestBody Todo todo){
-        service.add(todo);
+    public void createTodo(@RequestBody Todo todo) {
+        todoRepository.save(todo);
     }
 
-    @RequestMapping(value = "/{todoId}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTodo(@RequestBody Todo todo){
-        if( service.getById(todo.getId()) != null ){
-            service.update(todo);
+    @RequestMapping(value = "todos/{todoId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void updateTodo(@RequestBody String todoId) {
+        if (todoRepository.exists(todoId)) {
+            Todo todo = todoRepository.findOne(todoId);
+            todoRepository.save(todo);
         }
     }
 
-    @RequestMapping(value = "/{todoId}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTodo(@PathVariable String todoId){
-        if(todoId != null) {
-            service.deleteById(todoId);
+    @RequestMapping(value = "/{todoId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTodo(@PathVariable String todoId) {
+        if (todoRepository.exists(todoId)) {
+            todoRepository.delete(todoId);
         }
     }
 
